@@ -1,91 +1,79 @@
-(function($) {
-	"use strict"
+$(function() {
+  "use strict";
 
-	// Fixed Nav
-	var lastScrollTop = 0;
-	$(window).on('scroll', function() {
-		var wScroll = $(this).scrollTop();
-		if ( wScroll > $('#nav').height() ) {
-			if ( wScroll < lastScrollTop ) {
-				$('#nav-fixed').removeClass('slide-up').addClass('slide-down');
-			} else {
-				$('#nav-fixed').removeClass('slide-down').addClass('slide-up');
-			}
-		}
-		lastScrollTop = wScroll
-	});
 
-	// Search Nav
-	$('.search-btn').on('click', function () {
-		$('.search-form').addClass('active');
-	});
 
-	$('.search-close').on('click', function () {
-		$('.search-form').removeClass('active');
-	});
+  // //------- Sticky Header -------//
+  // $(".sticky-header").sticky();
 
-	// Aside Nav
-	$(document).click(function(event) {
-		if (!$(event.target).closest($('#nav-aside')).length) {
-			if ( $('#nav-aside').hasClass('active') ) {
-				$('#nav-aside').removeClass('active');
-				$('#nav').removeClass('shadow-active');
-			} else {
-				if ($(event.target).closest('.aside-btn').length) {
-					$('#nav-aside').addClass('active');
-					$('#nav').addClass('shadow-active');
-				}
-			}
-		}
-	});
+  // //------- video popup -------//
+  // $(".hero-banner__video, .video-play-button").magnificPopup({
+  //   disableOn: 700,
+  //   type: "iframe",
+  //   mainClass: "mfp-fade",
+  //   removalDelay: 160,
+  //   preloader: false,
+  //   fixedContentPos: false
+  // });
 
-	$('.nav-aside-close').on('click', function () {
-		$('#nav-aside').removeClass('active');
-		$('#nav').removeClass('shadow-active');
-	});
+  // //------- mailchimp --------//  
+	// function mailChimp() {
+	// 	$('#mc_embed_signup').find('form').ajaxChimp();
+  // }
+  // mailChimp();
 
-	// Sticky Shares
-	var $shares = $('.sticky-container .sticky-shares'),
-	$sharesHeight = $shares.height(),
-	$sharesTop,
-	$sharesCon = $('.sticky-container'),
-	$sharesConTop,
-	$sharesConleft,
-	$sharesConHeight,
-	$sharesConBottom,
-	$offsetTop = 80;
+  var nav_offset_top = $('header').height() + 50; 
+    /*-------------------------------------------------------------------------------
+	  Navbar 
+	-------------------------------------------------------------------------------*/
 
-	function setStickyPos () {
-		if ($shares.length > 0) {
-			$sharesTop = $shares.offset().top
-			$sharesConTop = $sharesCon.offset().top;
-			$sharesConleft = $sharesCon.offset().left;
-			$sharesConHeight = $sharesCon.height();
-			$sharesConBottom = $sharesConHeight + $sharesConTop;
-		}
+	//* Navbar Fixed  
+    function navbarFixed(){
+        if ( $('.header_area').length ){ 
+            $(window).scroll(function() {
+                var scroll = $(window).scrollTop();   
+                if (scroll >= nav_offset_top ) {
+                    $(".header_area").addClass("navbar_fixed");
+                } else {
+                    $(".header_area").removeClass("navbar_fixed");
+                }
+            });
+        };
+    };
+    navbarFixed();
+
+
+  if ($('.blog-slider').length) {
+    $('.blog-slider').owlCarousel({
+        loop: true,
+        margin: 30,
+        items: 1,
+        nav: true,
+        autoplay: 2500,
+        smartSpeed: 1500,
+        dots: false,
+        responsiveClass: true,
+        navText : ["<div class='blog-slider__leftArrow'><img src='img/home/left-arrow.png'></div>","<div class='blog-slider__rightArrow'><img src='img/home/right-arrow.png'></div>"],
+        responsive:{
+          0:{
+              items:1
+          },
+          600:{
+              items:2
+          },
+          1000:{
+              items:3
+          }
+      }
+    })
+  }
+
+  //------- mailchimp --------//  
+	function mailChimp() {
+		$('#mc_embed_signup').find('form').ajaxChimp();
 	}
+  mailChimp();
+  
+});
 
-	function stickyShares (wScroll) {
-		if ($shares.length > 0) {
-			if ( $sharesConBottom - $sharesHeight - $offsetTop < wScroll ) {
-				$shares.css({ position: 'absolute', top: $sharesConHeight - $sharesHeight , left:0});
-			} else if ( $sharesTop < wScroll + $offsetTop ) {
-				$shares.css({ position: 'fixed', top: $offsetTop, left: $sharesConleft });
-			} else {
-				$shares.css({position: 'absolute', top: 0, left: 0});
-			}
-		}
-	}
 
-	$(window).on('scroll', function() {
-		stickyShares($(this).scrollTop());
-	});
-
-	$(window).resize(function() {
-		setStickyPos();
-		stickyShares($(this).scrollTop());
-	});
-
-	setStickyPos();
-
-})(jQuery);
